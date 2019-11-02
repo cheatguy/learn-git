@@ -2,27 +2,21 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"os"
-	"strings"
+	"time"
 )
 
+func main(){
 
-	func main() {
-		reader := strings.NewReader("Clear is better than clever")
-		p := make([]byte, 4)
+	var channel = make(chan string, 3)
 
-		for {
-			n, err := reader.Read(p)
-			if err != nil{
-				if err == io.EOF {
-					fmt.Println("EOF:", n)
-					break
-				}
-				fmt.Println(err)
-				os.Exit(1)
-			}
-			fmt.Println(n, string(p[:n]))
-		}
-	}
+	go func() {
+		channel <- "A"
+		channel <- "B"
+		channel <- "C"
+		fmt.Println("我发送了3个数据")
 
+		channel <- "D"
+		fmt.Println("我发送了第4个数据")
+	}()
+	time.Sleep(time.Second)
+}
